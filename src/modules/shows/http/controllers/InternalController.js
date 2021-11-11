@@ -86,5 +86,43 @@ module.exports = {
         } catch (error) {
             res.status(500).json({ error })
         }
+    },
+
+    addView: async (req, res) => {
+        try {
+            const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+            const view = InternalService.addView(ip);
+            res.json(view);
+        } catch (error) {
+            res.status(500).json({ error })
+        }
+    },
+
+    setViewOffline: async (req, res) => {
+        try {
+            const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+            const view = await InternalService.setViewOffline(ip);
+            res.json(view);
+        } catch (error) {
+            res.status(500).json({ error })
+        }
+    },
+
+    getViewsCount: async (req, res) => {
+        try {
+            const viewsCount = await InternalService.getViewsCount();
+            res.json({ views_count: viewsCount });
+        } catch (error) {
+            res.status(500).json({ error })
+        }
+    },
+
+    getOnlineViewsCount: async (req, res) => {
+        try {
+            const viewsCount = await InternalService.getOnlineViewsCount();
+            res.json({ views_count: viewsCount });
+        } catch (error) {
+            res.status(500).json({ error })
+        }
     }
 }

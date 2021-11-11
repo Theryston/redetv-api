@@ -33,6 +33,11 @@ router.post('/redetv/logo', multer(multerConfig).single('file'), InternalControl
 router.put('/redetv/logo/:redetvLogo_id', multer(multerConfig).single('file'), InternalController.updateRedetvLogo);
 router.get('/redetv/logo', multer(multerConfig).single('file'), InternalController.getRedetvLogo);
 
+router.post('/view', InternalController.addView);
+router.patch('/view', InternalController.setViewOffline);
+router.get('/view/online', InternalController.getOnlineViewsCount);
+router.get('/view', InternalController.getViewsCount);
+
 router.post('/data', ShowController.createShow);
 router.get('/list', ShowController.getAllShows)
 router.get('/:show_id', ShowController.getShow)
