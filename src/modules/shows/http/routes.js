@@ -5,6 +5,7 @@ const multerConfig = require('../../../config/multer')
 const router = Router()
 
 const ShowController = require('./controllers/ShowController')
+const InternalController = require('./controllers/InternalController')
 
 router.get('/file/:key', ShowController.getDownloadUrl)
 
@@ -21,6 +22,12 @@ router.put('/episode/:episode_id', ShowController.updateEpisode)
 router.post('/season', ShowController.createSeason)
 router.get('/season/:season_id', ShowController.getSeason)
 router.put('/season/:season_id', ShowController.updateSeason)
+
+router.post('/logo/data', multer(multerConfig).single('file'), InternalController.createLogo);
+router.get('/logo/list', InternalController.getAllLogos);
+router.get('/logo/:logo_id', InternalController.getLogo);
+router.put('/logo/:logo_id', InternalController.updateLogo);
+router.delete('/logo/:logo_id', InternalController.deleteLogo);
 
 router.post('/data', ShowController.createShow);
 router.get('/list', ShowController.getAllShows)
