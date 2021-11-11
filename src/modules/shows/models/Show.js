@@ -3,7 +3,8 @@ const mongoose = require('../../../config/database')
 const showSchema = mongoose.Schema({
     name: String,
     posters: [{
-        type: String
+        type: mongoose.ObjectId,
+        ref: 'Source'
     }],
     description: String,
     short_description: String,
@@ -11,7 +12,7 @@ const showSchema = mongoose.Schema({
         type: String,
         required: false
     }],
-    release_date_of: Date,
+    release_date_of: Date | String,
     default_duration: Number,
     show_hosts_name: [{
         type: String

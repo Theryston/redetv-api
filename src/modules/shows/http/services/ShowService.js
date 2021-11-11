@@ -1,6 +1,9 @@
-const Source = require('../../models/Source');
 const { Readable } = require('stream');
 const oneDriveAPI = require('onedrive-api');
+const Source = require('../../models/Source');
+const Episode = require('../../models/Episode');
+const Season = require('../../models/Season');
+const Show = require('../../models/Show');
 const OneDriveSecret = require('../../models/OneDriveSecret');
 const axios = require('axios');
 
@@ -93,6 +96,52 @@ module.exports = {
             return response.data['@microsoft.graph.downloadUrl'];
         } catch (error) {
             console.error(error)
+            throw error;
+        }
+    },
+
+    createEpisode: async ({ sources, name, number }) => {
+        try {
+            const episode = await Episode.create({ sources, name, number });
+            return episode;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    getEpisode: async (episode_id) => {
+        try {
+            const episode = await Episode.findById(episode_id).populate('sources');
+            return episode;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    },
+
+    createSeason: async ({ episodes, name, number }) => {
+        try {
+            const season = await Season.create({ episodes, name, number });
+            return season;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    getSeason: async (season_id) => {
+        try {
+            const season = await Season.findById(season_id).populate('episodes');
+            return season;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    createShow: async (show_datas) => {
+        try {
+            const show = await Show.create(show_datas);
+            return show;
+        } catch (error) {
             throw error;
         }
     }

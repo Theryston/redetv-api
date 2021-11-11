@@ -1,10 +1,6 @@
 const mongoose = require('../../../config/database');
 
 const EpisodeSchema = mongoose.Schema({
-    season: {
-        type: mongoose.ObjectId,
-        ref: 'Season',
-    },
     sources: [{
         type: mongoose.ObjectId,
         ref: 'Source',
