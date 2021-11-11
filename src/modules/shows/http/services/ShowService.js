@@ -142,6 +142,24 @@ module.exports = {
             const show = await Show.create(show_datas);
             return show;
         } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    },
+    getShow: async (show_id) => {
+        try {
+            const show = await Show.findById(show_id).populate('seasons');
+            return show;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    getAllShows: async () => {
+        try {
+            const shows = await Show.find();
+            return shows;
+        } catch (error) {
             throw error;
         }
     }

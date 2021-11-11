@@ -6,8 +6,6 @@ const router = Router()
 
 const ShowController = require('./controllers/ShowController')
 
-router.post('/data', ShowController.createShow);
-
 router.post('/source', multer(multerConfig).single('file'), ShowController.createSource);
 router.post('/source/poster/:source_id', multer(multerConfig).single('file'), ShowController.addPosterSource)
 router.get('/source/list', ShowController.getAllSource)
@@ -20,6 +18,10 @@ router.get('/episode/:episode_id', ShowController.getEpisode)
 
 router.post('/season', ShowController.createSeason)
 router.get('/season/:season_id', ShowController.getSeason)
+
+router.post('/data', ShowController.createShow);
+router.get('/list', ShowController.getAllShows)
+router.get('/:show_id', ShowController.getShow)
 
 
 module.exports = router;

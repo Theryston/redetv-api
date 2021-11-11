@@ -31,7 +31,7 @@ module.exports = {
 
             res.json(show);
         } catch (error) {
-            res.json({ error })
+            res.status(500).json({ error })
         }
     },
     createSource: async (req, res) => {
@@ -132,4 +132,92 @@ module.exports = {
             res.status(500).json({ error });
         }
     },
+
+    getShow: async (req, res) => {
+        const { show_id } = req.params;
+
+        try {
+            const show = {};
+            const showDb = await ShowService.getShow(show_id);
+
+            let posters = [];
+            for await (let poster of showDb.posters) {
+                let sourcePoster = await ShowService.getSource(poster);
+                let urlSourcePoster = await ShowService.getDownloadUrl(sourcePoster.key)
+                posters.push(urlSourcePoster);
+            }
+
+            const seasons = [];
+            for (let season of showDb.seasons) {
+                const seasonWithEpisodes = await ShowService.getSeason(season._id);
+
+                const episodes = [];
+                for (let episode of seasonWithEpisodes.episodes) {
+                    const episodeWidthSource = await ShowService.getEpisode(episode._id);
+
+                    const sources = [];
+                    for (let source of episodeWidthSource.sources) {
+                        const sourceUrl = await ShowService.getDownloadUrl(source.key);
+                        const sourcePosterUrl = await ShowService.getDownloadUrl(source.poster_key);
+                        sources.push({ _id: source._id, main: source.main, show_name: source.show_name, views_count: source.views_count, like_count: source.like_count, poster: sourcePosterUrl, url: sourceUrl });
+                    }
+
+                    episodes.push({ _id: episodeWidthSource._id, name: episodeWidthSource.name, number: episodeWidthSource.number, created_at: episodeWidthSource.created_at, sources });
+                }
+
+                seasons.push({ _id: seasonWithEpisodes._id, number: seasonWithEpisodes.number, name: seasonWithEpisodes.name, episodes: episodes });
+            }
+
+            show._id = showDb._id;
+            show.name = showDb.name;
+            show.posters = posters;
+            show.description = showDb.description;
+            show.short_description = showDb.short_description;
+            show.trailers = showDb.trailers;
+            show.release_date_of = showDb.release_date_of;
+            show.default_duration = showDb.default_duration;
+            show.show_hosts_name = showDb.show_hosts_name;
+            show.categories = showDb.categories;
+            show.created_at = showDb.created_at;
+            show.seasons = seasons;
+
+            res.json(show);
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ error });
+        }
+    },
+
+    getAllShows: async (req, res) => {
+        try {
+            const showsDb = await ShowService.getAllShows();
+
+            const shows = []
+            for (let show of showsDb) {
+                const posters = [];
+                for (let poster of show.posters) {
+                    let sourcePoster = await ShowService.getSource(poster);
+                    let urlSourcePoster = await ShowService.getDownloadUrl(sourcePoster.key)
+                    posters.push(urlSourcePoster);
+                }
+
+                shows.push({
+                    name: show.name,
+                    posters,
+                    description: show.description,
+                    short_description: show.short_description,
+                    trailers: show.trailers,
+                    release_date_of: show.release_date_of,
+                    default_duration: show.default_duration,
+                    show_hosts_name: show.show_hosts_name,
+                    categories: show.categories,
+                    created_at: show.created_at,
+                });
+            }
+
+            res.json(shows)
+        } catch (error) {
+            res.status(500).json({ error })
+        }
+    }
 }
