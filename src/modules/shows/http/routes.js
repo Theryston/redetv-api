@@ -3,7 +3,7 @@ const router = Router()
 
 const ShowController = require('./controllers/ShowController')
 
-router.get('/init', ShowController.init)
+router.post('/data', ShowController.createShow)
 
 
 module.exports = router;
