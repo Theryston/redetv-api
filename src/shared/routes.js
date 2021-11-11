@@ -3,6 +3,6 @@ const router = Router()
 
 const movieRoutes = require('../modules/shows/http/routes')
 
-router.use('/shows', movieRoutes)
+router.use('/show', movieRoutes)
 
 module.exports = router;

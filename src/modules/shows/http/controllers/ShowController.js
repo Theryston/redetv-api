@@ -14,5 +14,13 @@ module.exports = {
             categories,
             seasons
         } = req.body;
+        res.json({ OK: true })
+    },
+    createSource: async (req, res) => {
+        const { show_name, main } = req.body;
+        const key = '';
+
+        const source = await ShowService.createSource({ show_name, main, key });
+        res.json(source);
     }
 }
