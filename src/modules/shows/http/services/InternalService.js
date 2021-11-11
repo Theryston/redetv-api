@@ -1,4 +1,5 @@
-const Logo = require('../../models/Logo')
+const Logo = require('../../models/Logo');
+const RedetvLogo = require('../../models/RedetvLogo');
 
 module.exports = {
     createLogo: async (datas) => {
@@ -37,6 +38,33 @@ module.exports = {
         try {
             await Logo.findByIdAndDelete(logo_id);
             return true;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    createRedetvLogo: async (key) => {
+        try {
+            const logo = await RedetvLogo.create({ key });
+            return logo;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    updateRedetvLogo: async (redetvLogo_id, key) => {
+        try {
+            const logo = await RedetvLogo.findOneAndUpdate(redetvLogo_id, { key });
+            return logo;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    getRedetvLogo: async () => {
+        try {
+            const redetvLogo = await RedetvLogo.find();
+            return redetvLogo[0];
         } catch (error) {
             throw error;
         }

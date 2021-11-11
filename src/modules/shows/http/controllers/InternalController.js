@@ -44,7 +44,7 @@ module.exports = {
             const logo = await InternalService.updateLogo(logo_id, datas);
             res.json(logo);
         } catch (error) {
-            throw error;
+            res.status(500).json({ error })
         }
     },
     deleteLogo: async (req, res) => {
@@ -53,7 +53,38 @@ module.exports = {
             await InternalService.deleteLogo(logo_id);
             res.json({ OK: true });
         } catch (error) {
-            throw error;
+            res.status(500).json({ error })
+        }
+    },
+
+    createRedetvLogo: async (req, res) => {
+        try {
+            const key = await ShowService.uploadToOnedrive(req.file.buffer, 'redetv/logo', { fileSize: req.file.size, filename: Date.now().toString() + '-' + req.file.originalname });
+            const logo = await InternalService.createRedetvLogo(key);
+            res.json(logo);
+        } catch (error) {
+            res.status(500).json({ error })
+        }
+    },
+
+    updateRedetvLogo: async (req, res) => {
+        try {
+            const { redetvLogo_id } = req.params;
+            const key = await ShowService.uploadToOnedrive(req.file.buffer, 'redetv/logo', { fileSize: req.file.size, filename: Date.now().toString() + '-' + req.file.originalname });
+            const logo = await InternalService.updateRedetvLogo(redetvLogo_id, key);
+            res.json(logo);
+        } catch (error) {
+            res.status(500).json({ error })
+        }
+    },
+
+    getRedetvLogo: async (req, res) => {
+        try {
+            const redetvLogo = await InternalService.getRedetvLogo();
+            const url = await ShowService.getDownloadUrl(redetvLogo.key);
+            res.json({ _id: redetvLogo._id, url });
+        } catch (error) {
+            res.status(500).json({ error })
         }
     }
 }

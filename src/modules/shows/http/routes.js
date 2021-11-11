@@ -29,6 +29,10 @@ router.get('/logo/:logo_id', InternalController.getLogo);
 router.put('/logo/:logo_id', InternalController.updateLogo);
 router.delete('/logo/:logo_id', InternalController.deleteLogo);
 
+router.post('/redetv/logo', multer(multerConfig).single('file'), InternalController.createRedetvLogo);
+router.put('/redetv/logo/:redetvLogo_id', multer(multerConfig).single('file'), InternalController.updateRedetvLogo);
+router.get('/redetv/logo', multer(multerConfig).single('file'), InternalController.getRedetvLogo);
+
 router.post('/data', ShowController.createShow);
 router.get('/list', ShowController.getAllShows)
 router.get('/:show_id', ShowController.getShow)
