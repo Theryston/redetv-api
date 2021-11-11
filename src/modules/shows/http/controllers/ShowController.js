@@ -13,7 +13,8 @@ module.exports = {
                 default_duration,
                 show_hosts_name,
                 categories,
-                seasons
+                seasons,
+                main
             } = req.body;
 
             const show = await ShowService.createShow({
@@ -26,7 +27,8 @@ module.exports = {
                 default_duration,
                 show_hosts_name,
                 categories,
-                seasons
+                seasons,
+                main
             });
 
             res.json(show);
@@ -74,6 +76,18 @@ module.exports = {
             res.status(500).json({ error })
         }
     },
+    updateSource: async (req, res) => {
+        try {
+            const { source_id } = req.params;
+            const datas = req.body;
+            datas.key = undefined;
+            datas.poster_key = undefined;
+            const source = ShowService.updateSource(source_id, datas);
+            res.json(source);
+        } catch (error) {
+            res.status(500).json({ error })
+        }
+    },
     getDownloadUrl: async (req, res) => {
         try {
             const url = await ShowService.getDownloadUrl(req.params.key);
@@ -108,6 +122,17 @@ module.exports = {
         }
     },
 
+    updateEpisode: async (req, res) => {
+        try {
+            const { episode_id } = req.params;
+            const datas = req.body;
+            const episode = await ShowService.updateEpisode(episode_id, datas);
+            res.json(episode);
+        } catch (error) {
+            throw error;
+        }
+    },
+
     createSeason: async (req, res) => {
         const {
             episodes,
@@ -129,6 +154,18 @@ module.exports = {
             const season = await ShowService.getSeason(season_id);
             res.json(season);
         } catch (error) {
+            res.status(500).json({ error });
+        }
+    },
+
+    updateSeason: async (req, res) => {
+        try {
+            const { season_id } = req.params;
+            const datas = req.body;
+            const season = await ShowService.updateSeason(season_id, datas);
+            res.json(season);
+        } catch (error) {
+            console.error(error);
             res.status(500).json({ error });
         }
     },
@@ -170,6 +207,7 @@ module.exports = {
 
             show._id = showDb._id;
             show.name = showDb.name;
+            show.main = showDb.main;
             show.posters = posters;
             show.description = showDb.description;
             show.short_description = showDb.short_description;
@@ -202,7 +240,9 @@ module.exports = {
                 }
 
                 shows.push({
+                    _id: show._id,
                     name: show.name,
+                    main: show.main,
                     posters,
                     description: show.description,
                     short_description: show.short_description,
@@ -216,6 +256,25 @@ module.exports = {
             }
 
             res.json(shows)
+        } catch (error) {
+            res.status(500).json({ error })
+        }
+    },
+    deleteShow: async (req, res) => {
+        try {
+            const { show_id } = req.params;
+            await ShowService.deleteShow(show_id);
+            res.json({ OK: true });
+        } catch (error) {
+            res.status(500).json({ error })
+        }
+    },
+    updateShow: async (req, res) => {
+        try {
+            const { show_id } = req.params;
+            const datas = req.body;
+            const show = await ShowService.updateShow(show_id, datas);
+            res.json(show)
         } catch (error) {
             res.status(500).json({ error })
         }

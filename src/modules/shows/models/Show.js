@@ -32,6 +32,7 @@ const showSchema = mongoose.Schema({
         type: Date,
         default: Date.now()
     },
+    main: Boolean,
 })
 
 const Show = mongoose.model('Show', showSchema, 'shows');

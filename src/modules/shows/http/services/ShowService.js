@@ -89,6 +89,18 @@ module.exports = {
         }
     },
 
+    updateSource: async (source_id, datas) => {
+        try {
+            console.log(source_id)
+            const source = await Source.findByIdAndUpdate(source_id, {
+                ...datas,
+            });
+            return source;
+        } catch (error) {
+            throw error;
+        }
+    },
+
     getDownloadUrl: async (key) => {
         try {
             const access_token = (await OneDriveSecret.findOne()).access_token;
@@ -119,6 +131,15 @@ module.exports = {
         }
     },
 
+    updateEpisode: async (episode_id, datas) => {
+        try {
+            const episode = await Episode.findByIdAndUpdate(episode_id, datas);
+            return episode;
+        } catch (error) {
+            throw error;
+        }
+    },
+
     createSeason: async ({ episodes, name, number }) => {
         try {
             const season = await Season.create({ episodes, name, number });
@@ -131,6 +152,15 @@ module.exports = {
     getSeason: async (season_id) => {
         try {
             const season = await Season.findById(season_id).populate('episodes');
+            return season;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    updateSeason: async (season_id, datas) => {
+        try {
+            const season = await Season.findByIdAndUpdate(season_id, datas);
             return season;
         } catch (error) {
             throw error;
@@ -159,6 +189,24 @@ module.exports = {
         try {
             const shows = await Show.find();
             return shows;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    deleteShow: async (show_id) => {
+        try {
+            await Show.findByIdAndDelete(show_id);
+            return true;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    updateShow: async (show_id, datas) => {
+        try {
+            const show = await Show.findByIdAndUpdate(show_id, datas);
+            return show;
         } catch (error) {
             throw error;
         }
