@@ -72,7 +72,8 @@ module.exports = {
             const { redetvLogo_id } = req.params;
             const key = await ShowService.uploadToOnedrive(req.file.buffer, 'redetv/logo', { fileSize: req.file.size, filename: Date.now().toString() + '-' + req.file.originalname });
             const logo = await InternalService.updateRedetvLogo(redetvLogo_id, key);
-            res.json(logo);
+            const url = await ShowService.getDownloadUrl(key);
+            res.json({ _id: logo._id, url });
         } catch (error) {
             res.status(500).json({ error })
         }
