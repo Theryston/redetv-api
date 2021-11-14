@@ -66,7 +66,7 @@ module.exports = {
 
             return fileUploaded.id;
         } catch (error) {
-            console.error(error)
+            console.log('>>>>>>>', error)
             throw error;
         }
     },

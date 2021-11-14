@@ -40,7 +40,7 @@ module.exports = {
         try {
             const { show_name, main, folder } = req.body;
             const key = await ShowService.uploadToOnedrive(req.file.buffer, folder, { fileSize: req.file.size, filename: Date.now().toString() + '-' + req.file.originalname })
-
+            
             const source = await ShowService.createSource({ show_name, main, key });
             res.json(source);
         } catch (error) {

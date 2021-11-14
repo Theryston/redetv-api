@@ -2,6 +2,9 @@ const { Router } = require('express')
 const multer = require('multer');
 const multerConfig = require('../../../config/multer')
 
+const AdminMiddleware = require('./middlewares/AdminMiddleware')
+
+
 const router = Router()
 
 const ShowController = require('./controllers/ShowController')
@@ -9,7 +12,7 @@ const InternalController = require('./controllers/InternalController')
 
 router.get('/file/:key', ShowController.getDownloadUrl)
 
-router.post('/source', multer(multerConfig).single('file'), ShowController.createSource);
+router.post('/source', [multer(multerConfig).single('file'), AdminMiddleware], ShowController.createSource);
 router.post('/source/poster/:source_id', multer(multerConfig).single('file'), ShowController.addPosterSource)
 router.get('/source/list', ShowController.getAllSource)
 router.get('/source/:source_id', ShowController.getSource)
