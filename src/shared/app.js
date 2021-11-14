@@ -6,7 +6,7 @@ const morgan = require('morgan')
 const app = express()
 require('dotenv').config()
 
-const corsUrls = ['http://localhost:4200', 'https://fillscene.com']
+const corsUrls = ['http://localhost:4200', 'https://fillscene.com', 'http://localhost:62404']
 app.use(cors({ origin: corsUrls }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
