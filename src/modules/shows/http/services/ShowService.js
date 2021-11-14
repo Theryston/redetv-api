@@ -1,11 +1,12 @@
 const { Readable } = require('stream');
-const oneDriveAPI = require('onedrive-api');
 const Source = require('../../models/Source');
 const Episode = require('../../models/Episode');
 const Season = require('../../models/Season');
 const Show = require('../../models/Show');
 const OneDriveSecret = require('../../models/OneDriveSecret');
 const axios = require('axios');
+const got = require("got");
+// const { urlencoded } = require('body-parser');
 
 module.exports = {
     createSource: async ({ main, show_name, key }) => {
@@ -37,38 +38,76 @@ module.exports = {
     },
 
     uploadToOnedrive: async (binary, folder, file) => {
-        try {
-            const accessToken = (await OneDriveSecret.findOne()).access_token;
 
-            const fileStream = new Readable({
-                read() {
-                    this.push(binary);
-                    this.push(null);
+        const run = async (resolve, reject) => {
+            try {
+                const accessToken = (await OneDriveSecret.findOne()).access_token;
+
+                const fileStream = new Readable({
+                    read() {
+                        this.push(binary);
+                    }
+                });
+
+
+                folder = folder.split('/');
+                let onedriveFolder;
+
+                for (let f of folder) {
+                    onedriveFolder = (await axios.post(`https://graph.microsoft.com/v1.0/me/drive/items/${onedriveFolder ? encodeURI(onedriveFolder.id) : 'root'}/children`, {
+                        name: f,
+                        folder: {},
+                    }, { headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}` } })).data;
                 }
-            });
-            folder = folder.split('/');
-            let folderOnedrive;
-            for (let i = 0; i < folder.length; i++) {
-                folderOnedrive = await oneDriveAPI.items.createFolder({
-                    accessToken: accessToken,
-                    rootItemId: i == 0 ? 'root' : folderOnedrive.id,
-                    name: folder[i]
+
+                const uploadSession = (await axios.post(`https://graph.microsoft.com/v1.0/me/drive/items/${encodeURI(onedriveFolder.id)}:/${encodeURI(file.filename)}:/createUploadSession`, {}, { headers: { 'Authorization': `Bearer ${accessToken}` } })).data;
+                let chunks = [];
+                let chunksToUploadSize = 0;
+                let onedriveFile;
+                let uploadedBytes = 0;
+
+                fileStream.on('data', async (chunk) => {
+                    chunks.push(chunk);
+                    chunksToUploadSize += chunk.length;
+
+                    if (chunks.length === 20 || chunksToUploadSize + uploadedBytes === file.fileSize) {
+                        fileStream.pause();
+                        const payload = Buffer.concat(chunks, chunksToUploadSize);
+
+                        const uploadGotExtended = got.extend({
+                            method: "PUT",
+                            headers: {
+                                "Content-Length": chunksToUploadSize,
+                                "Content-Range":
+                                    "bytes " + uploadedBytes + "-" + (uploadedBytes + chunksToUploadSize - 1) + "/" + file.fileSize,
+                            },
+                            body: payload,
+                        });
+                        let res = await uploadGotExtended(uploadSession.uploadUrl);
+
+
+                        if (
+                            res.statusCode === 201 ||
+                            res.statusCode === 203 ||
+                            res.statusCode === 200
+                        ) {
+                            resolve(JSON.parse(res.body));
+                        }
+
+                        fileStream.resume();
+                    }
                 })
-            };
-
-            const fileUploaded = await oneDriveAPI.items.uploadSession({
-                accessToken: accessToken,
-                filename: file.filename,
-                fileSize: file.fileSize,
-                readableStream: fileStream,
-                parentId: folderOnedrive.id
-            }, () => { });
-
-            return fileUploaded.id;
-        } catch (error) {
-            console.log('>>>>>>>', error)
-            throw error;
+            } catch (error) {
+                reject(error);
+            }
         }
+
+        const func = new Promise(function (resolve, reject) {
+            run(resolve, reject)
+        })
+
+        const datas = await func;
+        return datas.id;
     },
 
     getSource: async (source_id) => {
