@@ -41,8 +41,14 @@ module.exports = {
         try {
             const { logo_id } = req.params;
             const datas = req.body;
-            const logo = await InternalService.updateLogo(logo_id, datas);
-            res.json(logo);
+            if (req.file) {
+                const key = await ShowService.uploadToOnedrive(req.file.buffer, datas.folder, { fileSize: req.file.size, filename: Date.now().toString() + '-' + req.file.originalname });
+                const logo = await InternalService.updateLogo(logo_id, { ...datas, key });
+                res.json(logo);
+            } else {
+                const logo = await InternalService.updateLogo(logo_id, datas);
+                res.json(logo);
+            }
         } catch (error) {
             res.status(500).json({ error })
         }
