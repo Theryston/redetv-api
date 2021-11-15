@@ -1,8 +1,50 @@
 const Logo = require('../../models/Logo');
 const RedetvLogo = require('../../models/RedetvLogo');
 const View = require('../../models/View');
+const New = require('../../models/New');
 
 module.exports = {
+    createNewLogo: async (datas) => {
+        try {
+            const newLogo = await New.create(datas);
+            return newLogo;
+        } catch (error) {
+            throw error;
+        }
+    },
+    getAllNewLogos: async () => {
+        try {
+            const logos = await New.find();
+            return logos;
+        } catch (error) {
+            throw error;
+        }
+    },
+    getNewLogo: async (_id) => {
+        try {
+            const newLogo = await New.findById(_id);
+            return newLogo;
+        } catch (error) {
+            throw error;
+        }
+    },
+    deleteNewLogo: async (_id) => {
+        try {
+            await New.findByIdAndDelete(_id);
+            return true;
+        } catch (error) {
+            throw error;
+        }
+    },
+    updateNewLogo: async (_id, datas) => {
+        try {
+            const newLogo = await New.findByIdAndUpdate(_id, datas);
+            return newLogo;
+        } catch (error) {
+            throw error;
+        }
+    },
+
     createLogo: async (datas) => {
         try {
             const logo = await Logo.create(datas);

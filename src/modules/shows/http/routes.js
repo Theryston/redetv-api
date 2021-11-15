@@ -36,6 +36,12 @@ router.post('/redetv/logo', [multer(multerConfig).single('file'), AdminMiddlewar
 router.put('/redetv/logo/:redetvLogo_id', [multer(multerConfig).single('file'), AdminMiddleware], InternalController.updateRedetvLogo);
 router.get('/redetv/logo', InternalController.getRedetvLogo);
 
+router.post('/news/data', [multer(multerConfig).single('file'), AdminMiddleware], InternalController.createNewLogo);
+router.get('/news/list', InternalController.getAllNewLogos);
+router.get('/news/:logo_id', InternalController.getNewLogo);
+router.delete('/news/:logo_id', AdminMiddleware, InternalController.deleteNewLogo);
+router.put('/news/:logo_id', [multer(multerConfig).single('file'), AdminMiddleware], InternalController.updateNewLogo);
+
 router.post('/view', InternalController.addView);
 router.patch('/view', InternalController.setViewOffline);
 router.get('/view/online', InternalController.getOnlineViewsCount);
