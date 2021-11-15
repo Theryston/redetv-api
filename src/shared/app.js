@@ -6,7 +6,7 @@ const morgan = require('morgan')
 const app = express()
 require('dotenv').config()
 
-const corsUrls = ['http://localhost:4200', 'https://redetv.vercel.app', 'http://localhost:49715', 'https://redetv-admin.vercel.app']
+const corsUrls = ['http://localhost:4200', 'https://redetv-one.vercel.app', 'http://localhost:49715', 'https://redetv-admin.vercel.app']
 app.use(cors({ origin: corsUrls }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
