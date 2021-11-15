@@ -26,11 +26,11 @@ router.post('/season', ShowController.createSeason)
 router.get('/season/:season_id', ShowController.getSeason)
 router.put('/season/:season_id', ShowController.updateSeason)
 
-router.post('/logo/data', multer(multerConfig).single('file'), InternalController.createLogo);
+router.post('/logo/data', [multer(multerConfig).single('file'), AdminMiddleware], InternalController.createLogo);
 router.get('/logo/list', InternalController.getAllLogos);
 router.get('/logo/:logo_id', InternalController.getLogo);
-router.put('/logo/:logo_id', InternalController.updateLogo);
-router.delete('/logo/:logo_id', InternalController.deleteLogo);
+router.put('/logo/:logo_id', AdminMiddleware, InternalController.updateLogo);
+router.delete('/logo/:logo_id', AdminMiddleware, InternalController.deleteLogo);
 
 router.post('/redetv/logo', [multer(multerConfig).single('file'), AdminMiddleware], InternalController.createRedetvLogo);
 router.put('/redetv/logo/:redetvLogo_id', [multer(multerConfig).single('file'), AdminMiddleware], InternalController.updateRedetvLogo);
