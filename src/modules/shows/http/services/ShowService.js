@@ -76,7 +76,6 @@ module.exports = {
                 let uploadedBytes = 0;
 
                 fileStream.on('data', async (chunk) => {
-                    console.log('ok')
                     chunks.push(chunk);
                     chunksToUploadSize += chunk.length;
 
