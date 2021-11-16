@@ -13,10 +13,10 @@ const InternalController = require('./controllers/InternalController')
 router.get('/file/:key', ShowController.getDownloadUrl)
 
 router.post('/source', [multer(multerConfig).single('file'), AdminMiddleware], ShowController.createSource);
-router.post('/source/poster/:source_id', multer(multerConfig).single('file'), ShowController.addPosterSource)
+router.post('/source/poster/:source_id', [multer(multerConfig).single('file'), AdminMiddleware], ShowController.addPosterSource)
 router.get('/source/list', ShowController.getAllSource)
 router.get('/source/:source_id', ShowController.getSource)
-router.put('/source/:source_id', ShowController.updateSource)
+router.put('/source/:source_id', AdminMiddleware, ShowController.updateSource)
 
 router.post('/episode', ShowController.createEpisode)
 router.get('/episode/:episode_id', ShowController.getEpisode)
@@ -47,11 +47,11 @@ router.patch('/view', InternalController.setViewOffline);
 router.get('/view/online', InternalController.getOnlineViewsCount);
 router.get('/view', InternalController.getViewsCount);
 
-router.post('/data', ShowController.createShow);
+router.post('/data', AdminMiddleware, ShowController.createShow);
 router.get('/list', ShowController.getAllShows)
 router.get('/:show_id', ShowController.getShow)
-router.put('/:show_id', ShowController.updateShow)
-router.delete('/:show_id', ShowController.deleteShow)
+router.put('/:show_id', AdminMiddleware, ShowController.updateShow)
+router.delete('/:show_id', AdminMiddleware, ShowController.deleteShow)
 
 
 module.exports = router;
