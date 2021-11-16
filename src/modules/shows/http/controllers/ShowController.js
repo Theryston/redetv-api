@@ -40,7 +40,7 @@ module.exports = {
         try {
             const { show_name, main, folder } = req.body;
             const key = await ShowService.uploadToOnedrive(req.file.buffer, folder, { fileSize: req.file.size, filename: Date.now().toString() + '-' + req.file.originalname })
-            
+
             const source = await ShowService.createSource({ show_name, main, key });
             res.json(source);
         } catch (error) {
@@ -195,7 +195,12 @@ module.exports = {
                     const sources = [];
                     for (let source of episodeWidthSource.sources) {
                         const sourceUrl = await ShowService.getDownloadUrl(source.key);
-                        const sourcePosterUrl = await ShowService.getDownloadUrl(source.poster_key);
+                        let sourcePosterUrl;
+                        if (source.poster_key) {
+                            sourcePosterUrl = await ShowService.getDownloadUrl(source.poster_key);
+                        } else {
+                            sourcePosterUrl = '';
+                        }
                         sources.push({ _id: source._id, main: source.main, show_name: source.show_name, views_count: source.views_count, like_count: source.like_count, poster: sourcePosterUrl, url: sourceUrl });
                     }
 
@@ -221,7 +226,7 @@ module.exports = {
 
             res.json(show);
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             res.status(500).json({ error });
         }
     },

@@ -38,9 +38,9 @@ module.exports = {
     },
 
     uploadToOnedrive: async (binary, folder, file) => {
+        try {
 
-        const run = async (resolve, reject) => {
-            try {
+            const run = async (resolve, reject) => {
                 const accessToken = (await OneDriveSecret.findOne()).access_token;
 
                 const fileStream = new Readable({
@@ -83,7 +83,12 @@ module.exports = {
                             },
                             body: payload,
                         });
-                        let res = await uploadGotExtended(uploadSession.uploadUrl);
+                        let res;
+                        try {
+                            res = await uploadGotExtended(uploadSession.uploadUrl);
+                        } catch (error) {
+                            res = error;
+                        }
 
 
                         if (
@@ -97,17 +102,18 @@ module.exports = {
                         fileStream.resume();
                     }
                 })
-            } catch (error) {
-                reject(error);
             }
+
+            const func = new Promise(function (resolve, reject) {
+                run(resolve, reject)
+            })
+
+            const datas = await func;
+            return datas.id;
+        } catch (error) {
+            console.error(error);
+            // throw error;
         }
-
-        const func = new Promise(function (resolve, reject) {
-            run(resolve, reject)
-        })
-
-        const datas = await func;
-        return datas.id;
     },
 
     getSource: async (source_id) => {
@@ -235,6 +241,19 @@ module.exports = {
 
     deleteShow: async (show_id) => {
         try {
+            const show = await Show.findById(show_id).populate('seasons');
+            await Source.findByIdAndDelete(show.posters[0]);
+            for (let season of show.seasons) {
+                const episodes = season.episodes;
+                for (let episode of episodes) {
+                    const episodeDb = await Episode.findById(episode);
+                    for (let source of episodeDb.sources) {
+                        await Source.findByIdAndDelete(source);
+                    }
+                    await Episode.findByIdAndDelete(episode);
+                }
+                await Season.findByIdAndDelete(season);
+            }
             await Show.findByIdAndDelete(show_id);
             return true;
         } catch (error) {
