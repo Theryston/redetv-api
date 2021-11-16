@@ -54,13 +54,22 @@ module.exports = {
                 let onedriveFolder;
 
                 for (let f of folder) {
-                    onedriveFolder = (await axios.post(`https://graph.microsoft.com/v1.0/me/drive/items/${onedriveFolder ? encodeURI(onedriveFolder.id) : 'root'}/children`, {
-                        name: f,
-                        folder: {},
-                    }, { headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}` } })).data;
+                    try {
+                        onedriveFolder = (await axios.post(`https://graph.microsoft.com/v1.0/me/drive/items/${onedriveFolder ? encodeURI(onedriveFolder.id) : 'root'}/children`, {
+                            name: f,
+                            folder: {},
+                        }, { headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}` } })).data;
+                    } catch (error) {
+                        reject(error);
+                    }
                 }
 
-                const uploadSession = (await axios.post(`https://graph.microsoft.com/v1.0/me/drive/items/${encodeURI(onedriveFolder.id)}:/${encodeURI(file.filename)}:/createUploadSession`, {}, { headers: { 'Authorization': `Bearer ${accessToken}` } })).data;
+                let uploadSession;
+                try {
+                    uploadSession = (await axios.post(`https://graph.microsoft.com/v1.0/me/drive/items/${encodeURI(onedriveFolder.id)}:/${encodeURI(file.filename)}:/createUploadSession`, {}, { headers: { 'Authorization': `Bearer ${accessToken}` } })).data;
+                } catch (error) {
+                    reject(error);
+                }
                 let chunks = [];
                 let chunksToUploadSize = 0;
                 let onedriveFile;
@@ -111,8 +120,7 @@ module.exports = {
             const datas = await func;
             return datas.id;
         } catch (error) {
-            console.error(error);
-            // throw error;
+            throw error;
         }
     },
 
@@ -152,7 +160,6 @@ module.exports = {
             const response = await axios.get('https://graph.microsoft.com/v1.0/drive/items/' + key, { headers: { authorization: 'Bearer ' + access_token } });
             return response.data['@microsoft.graph.downloadUrl'];
         } catch (error) {
-            console.error(error)
             throw error;
         }
     },
@@ -171,7 +178,6 @@ module.exports = {
             const episode = await Episode.findById(episode_id).populate('sources');
             return episode;
         } catch (error) {
-            console.error(error);
             throw error;
         }
     },
@@ -217,7 +223,6 @@ module.exports = {
             const show = await Show.create(show_datas);
             return show;
         } catch (error) {
-            console.error(error);
             throw error;
         }
     },

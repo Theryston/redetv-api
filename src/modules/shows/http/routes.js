@@ -18,13 +18,13 @@ router.get('/source/list', ShowController.getAllSource)
 router.get('/source/:source_id', ShowController.getSource)
 router.put('/source/:source_id', AdminMiddleware, ShowController.updateSource)
 
-router.post('/episode', ShowController.createEpisode)
+router.post('/episode', AdminMiddleware, ShowController.createEpisode)
 router.get('/episode/:episode_id', ShowController.getEpisode)
-router.put('/episode/:episode_id', ShowController.updateEpisode)
+router.put('/episode/:episode_id', AdminMiddleware, ShowController.updateEpisode)
 
-router.post('/season', ShowController.createSeason)
+router.post('/season', AdminMiddleware, ShowController.createSeason)
 router.get('/season/:season_id', ShowController.getSeason)
-router.put('/season/:season_id', ShowController.updateSeason)
+router.put('/season/:season_id', AdminMiddleware, ShowController.updateSeason)
 
 router.post('/logo/data', [multer(multerConfig).single('file'), AdminMiddleware], InternalController.createLogo);
 router.get('/logo/list', InternalController.getAllLogos);

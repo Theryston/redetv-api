@@ -165,7 +165,6 @@ module.exports = {
             const season = await ShowService.updateSeason(season_id, datas);
             res.json(season);
         } catch (error) {
-            console.error(error);
             res.status(500).json({ error });
         }
     },
