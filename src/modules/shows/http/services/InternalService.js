@@ -1,6 +1,7 @@
 const Logo = require('../../models/Logo');
 const RedetvLogo = require('../../models/RedetvLogo');
 const View = require('../../models/View');
+const Source = require('../../models/Source');
 const New = require('../../models/New');
 
 module.exports = {
@@ -150,6 +151,26 @@ module.exports = {
         try {
             const views = await View.find({ 'online': true });
             return views.length;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    addViewToSource: async (source_id) => {
+        try {
+            const source = await Source.findById(source_id);
+            await Source.findByIdAndUpdate(source_id, { views_count: source.views_count + 1 });
+            return source.views_count + 1;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    addLikeToSource: async (source_id) => {
+        try {
+            const source = await Source.findById(source_id);
+            await Source.findByIdAndUpdate(source_id, { like_count: source.like_count + 1 });
+            return source.like_count + 1;
         } catch (error) {
             throw error;
         }

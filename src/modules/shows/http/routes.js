@@ -15,6 +15,8 @@ router.get('/file/:key', ShowController.getDownloadUrl)
 router.post('/source', [multer(multerConfig).single('file'), AdminMiddleware], ShowController.createSource);
 router.post('/source/poster/:source_id', [multer(multerConfig).single('file'), AdminMiddleware], ShowController.addPosterSource)
 router.get('/source/list', ShowController.getAllSource)
+router.put('/source/like/:source_id', InternalController.addLikeToSource)
+router.put('/source/view/:source_id', InternalController.addViewToSource)
 router.get('/source/:source_id', ShowController.getSource)
 router.put('/source/:source_id', AdminMiddleware, ShowController.updateSource)
 

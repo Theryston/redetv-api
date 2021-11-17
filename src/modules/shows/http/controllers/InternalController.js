@@ -160,7 +160,7 @@ module.exports = {
 
     addView: async (req, res) => {
         try {
-            const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+            const ip = req.body.user_ip;
             const view = InternalService.addView(ip);
             res.json(view);
         } catch (error) {
@@ -170,7 +170,7 @@ module.exports = {
 
     setViewOffline: async (req, res) => {
         try {
-            const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+            const ip = req.body.user_ip;
             const view = await InternalService.setViewOffline(ip);
             res.json(view);
         } catch (error) {
@@ -191,6 +191,27 @@ module.exports = {
         try {
             const viewsCount = await InternalService.getOnlineViewsCount();
             res.json({ views_count: viewsCount });
+        } catch (error) {
+            res.status(500).json({ error })
+        }
+    },
+
+    addViewToSource: async (req, res) => {
+        try {
+            const { source_id } = req.params;
+            const viewsCount = await InternalService.addViewToSource(source_id);
+            res.json({ views_count: viewsCount })
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({ error })
+        }
+    },
+
+    addLikeToSource: async (req, res) => {
+        try {
+            const { source_id } = req.params;
+            const likesCount = await InternalService.addLikeToSource(source_id);
+            res.json({ likes_count: likesCount })
         } catch (error) {
             res.status(500).json({ error })
         }
