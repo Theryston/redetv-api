@@ -11,4 +11,4 @@ setInterval(async () => {
     } catch (error) {
         console.log('Error in set offline')
     }
-}, 10000);
+}, 30000);
