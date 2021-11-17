@@ -142,7 +142,7 @@ module.exports = {
     getViewsCount: async () => {
         try {
             const views = await View.find();
-            return views.length + 500;
+            return views.length + 495.000;
         } catch (error) {
             throw error;
         }
