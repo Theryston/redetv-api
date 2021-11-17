@@ -21,6 +21,7 @@ router.put('/source/:source_id', AdminMiddleware, ShowController.updateSource)
 router.post('/episode', AdminMiddleware, ShowController.createEpisode)
 router.get('/episode/:episode_id', ShowController.getEpisode)
 router.put('/episode/:episode_id', AdminMiddleware, ShowController.updateEpisode)
+router.delete('/episode/:episode_id', AdminMiddleware, ShowController.deleteEpisode)
 
 router.post('/season', AdminMiddleware, ShowController.createSeason)
 router.get('/season/:season_id', ShowController.getSeason)

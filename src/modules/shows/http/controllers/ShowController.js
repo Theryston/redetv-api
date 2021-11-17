@@ -133,6 +133,16 @@ module.exports = {
         }
     },
 
+    deleteEpisode: async (req, res) => {
+        try {
+            const { episode_id } = req.params;
+            await ShowService.deleteEpisode(episode_id);
+            res.json({ OK: true });
+        } catch (error) {
+            res.status(500).json({ error });
+        }
+    },
+
     createSeason: async (req, res) => {
         const {
             episodes,
@@ -290,6 +300,7 @@ module.exports = {
             const show = await ShowService.updateShow(show_id, datas);
             res.json(show)
         } catch (error) {
+            console.log(error)
             res.status(500).json({ error })
         }
     }

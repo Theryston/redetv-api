@@ -192,6 +192,19 @@ module.exports = {
         }
     },
 
+    deleteEpisode: async (episode_id) => {
+        try {
+            const episode = await Episode.findById(episode_id).populate('sources');
+            for (let source of episode.sources) {
+                await Source.findByIdAndDelete(source._id);
+            }
+            await Episode.findByIdAndDelete(episode_id);
+            return true;
+        } catch (error) {
+            throw error;
+        }
+    },
+
     createSeason: async ({ episodes, name, number }) => {
         try {
             const season = await Season.create({ episodes, name, number });
@@ -227,6 +240,7 @@ module.exports = {
                     await Source.findByIdAndDelete(source);
                 }
                 await Episode.findByIdAndDelete(episode);
+                return true;
             }
             await Season.findByIdAndDelete(season_id);
         } catch (error) {
