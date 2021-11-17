@@ -136,7 +136,7 @@ module.exports = {
 
     getAllSource: async () => {
         try {
-            const source = await Source.find({ limit: 12 });
+            const source = await Source.find({}).sort([['created_at', -1]]);
             return source;
         } catch (error) {
             throw error;
