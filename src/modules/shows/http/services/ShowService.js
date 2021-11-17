@@ -6,7 +6,6 @@ const Show = require('../../models/Show');
 const OneDriveSecret = require('../../models/OneDriveSecret');
 const axios = require('axios');
 const got = require("got");
-// const { urlencoded } = require('body-parser');
 
 module.exports = {
     createSource: async ({ main, show_name, key }) => {
