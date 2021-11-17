@@ -25,6 +25,7 @@ router.put('/episode/:episode_id', AdminMiddleware, ShowController.updateEpisode
 router.post('/season', AdminMiddleware, ShowController.createSeason)
 router.get('/season/:season_id', ShowController.getSeason)
 router.put('/season/:season_id', AdminMiddleware, ShowController.updateSeason)
+router.delete('/season/:season_id', AdminMiddleware, ShowController.deleteSeason)
 
 router.post('/logo/data', [multer(multerConfig).single('file'), AdminMiddleware], InternalController.createLogo);
 router.get('/logo/list', InternalController.getAllLogos);

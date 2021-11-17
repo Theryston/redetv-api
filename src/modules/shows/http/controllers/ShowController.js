@@ -169,6 +169,16 @@ module.exports = {
         }
     },
 
+    deleteSeason: async (req, res) => {
+        try {
+            const { season_id } = req.params;
+            await ShowService.deleteSeason(season_id);
+            res.json({ OK: true });
+        } catch (error) {
+            res.status(500).json({ error });
+        }
+    },
+
     getShow: async (req, res) => {
         const { show_id } = req.params;
 

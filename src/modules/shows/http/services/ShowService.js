@@ -219,6 +219,21 @@ module.exports = {
         }
     },
 
+    deleteSeason: async (season_id) => {
+        try {
+            const season = await Season.findById(season_id).populate('episodes');
+            for (let episode of season.episodes) {
+                for (let source of episode.sources) {
+                    await Source.findByIdAndDelete(source);
+                }
+                await Episode.findByIdAndDelete(episode);
+            }
+            await Season.findByIdAndDelete(season_id);
+        } catch (error) {
+            throw error;
+        }
+    },
+
     createShow: async (show_datas) => {
         try {
             const show = await Show.create(show_datas);
