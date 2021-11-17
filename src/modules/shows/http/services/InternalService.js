@@ -132,6 +132,7 @@ module.exports = {
     setViewOffline: async (ip) => {
         try {
             await View.findOneAndUpdate({ 'ip': ip }, { online: false });
+            console.log(ip)
             return { online: false };
         } catch (error) {
             throw error;
