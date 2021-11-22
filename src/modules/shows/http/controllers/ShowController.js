@@ -245,7 +245,6 @@ module.exports = {
 
             res.json(show);
         } catch (error) {
-            // console.log(error);
             res.status(500).json({ error });
         }
     },
