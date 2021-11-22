@@ -7,6 +7,10 @@ const SourceSchema = mongoose.Schema({
     views_count: Number,
     like_count: Number,
     key: String,
+    created_at: {
+        type: Date,
+        default: Date.now(),
+    }
 });
 
 const Source = mongoose.model('Source', SourceSchema, 'sources');
