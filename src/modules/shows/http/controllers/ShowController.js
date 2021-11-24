@@ -1,4 +1,5 @@
 const ShowService = require('../services/ShowService')
+const pm2 = require('pm2');
 
 module.exports = {
     createShow: async(req, res) => {
@@ -43,6 +44,9 @@ module.exports = {
 
             const source = await ShowService.createSource({ show_name, main, key });
             res.json(source);
+            setTimeout(() => {
+                pm2.restart('../../../../../ecosystem.config.js')
+            }, 1000)
         } catch (error) {
             console.error(error)
             res.status(500).json({ error })
