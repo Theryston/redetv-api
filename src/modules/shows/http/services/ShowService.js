@@ -71,46 +71,59 @@ module.exports = {
                 }
                 let chunks = [];
                 let chunksToUploadSize = 0;
-                let onedriveFile;
                 let uploadedBytes = 0;
+                // let chunkSize = binary.length / 2;
+                let chunkSize = binary.length;
+                console.log(chunkSize)
 
-                fileStream.on('data', async(chunk) => {
-                    accessToken = (await OneDriveSecret.findOne()).access_token;
-                    console.log(`Uploading ` + chunk.length)
-                    chunks.push(chunk);
-                    chunksToUploadSize += chunk.length;
+                fileStream.on('readable', async function() {
+                    let chunk;
+                    let doProccess = true;
+                    while (doProccess) {
+                        chunk = fileStream.read(chunkSize)
+                        if (!chunk) {
+                            doProccess = false;
+                            break;
+                        };
+                        chunks.push(chunk);
+                        console.log(`Uploading ` + chunk.length)
+                        chunksToUploadSize += chunk.length;
 
-                    if (chunks.length === 20 || chunksToUploadSize + uploadedBytes === file.fileSize) {
-                        fileStream.pause();
-                        const payload = Buffer.concat(chunks, chunksToUploadSize);
+                        if (chunks.length === 20 || chunksToUploadSize + uploadedBytes === file.fileSize) {
+                            fileStream.pause();
+                            const payload = Buffer.concat(chunks, chunksToUploadSize);
 
-                        const uploadGotExtended = got.extend({
-                            method: "PUT",
-                            headers: {
-                                "Content-Length": chunksToUploadSize,
-                                "Content-Range": "bytes " + uploadedBytes + "-" + (uploadedBytes + chunksToUploadSize - 1) + "/" + file.fileSize,
-                            },
-                            body: payload,
-                        });
-                        let res;
-                        try {
-                            res = await uploadGotExtended(uploadSession.uploadUrl);
-                        } catch (error) {
-                            console.log(error);
-                            res = error;
+                            const uploadGotExtended = got.extend({
+                                method: "PUT",
+                                headers: {
+                                    "Content-Length": chunksToUploadSize,
+                                    "Content-Range": "bytes " + uploadedBytes + "-" + (uploadedBytes + chunksToUploadSize - 1) + "/" + file.fileSize,
+                                },
+                                body: payload,
+                            });
+                            let res;
+                            try {
+                                res = await uploadGotExtended(uploadSession.uploadUrl);
+                            } catch (error) {
+                                console.log(error);
+                                res = error;
+                            }
+
+
+                            if (
+                                res.statusCode === 201 ||
+                                res.statusCode === 203 ||
+                                res.statusCode === 200
+                            ) {
+                                console.log('okkkkkkkkkkkkkkkkkkk')
+                                fileStream.destroy();
+                                doProccess = false;
+                                resolve(JSON.parse(res.body));
+                                break;
+                            }
+
+                            fileStream.resume();
                         }
-
-
-                        if (
-                            res.statusCode === 201 ||
-                            res.statusCode === 203 ||
-                            res.statusCode === 200
-                        ) {
-                            fileStream.destroy();
-                            resolve(JSON.parse(res.body));
-                        }
-
-                        fileStream.resume();
                     }
                 })
             }
