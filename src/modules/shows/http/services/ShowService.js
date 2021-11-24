@@ -119,7 +119,6 @@ module.exports = {
                                 fileStream.destroy();
                                 doProccess = false;
                                 resolve(JSON.parse(res.body));
-                                break;
                             }
 
                             fileStream.resume();
