@@ -115,6 +115,7 @@ module.exports = {
                             ) {
                                 console.log('okkkkkkkkkkkkkkkkkkk')
                                 fileStream.destroy();
+                                binary = null;
                                 doProccess = false;
                                 resolve(JSON.parse(res.body));
                             }
