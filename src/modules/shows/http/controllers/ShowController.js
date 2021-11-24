@@ -1,7 +1,7 @@
 const ShowService = require('../services/ShowService')
 
 module.exports = {
-    createShow: async (req, res) => {
+    createShow: async(req, res) => {
         try {
             const {
                 name,
@@ -36,7 +36,7 @@ module.exports = {
             res.status(500).json({ error })
         }
     },
-    createSource: async (req, res) => {
+    createSource: async(req, res) => {
         try {
             const { show_name, main, folder } = req.body;
             const key = await ShowService.uploadToOnedrive(req.file.buffer, folder, { fileSize: req.file.size, filename: Date.now().toString() + '-' + req.file.originalname })
@@ -44,10 +44,11 @@ module.exports = {
             const source = await ShowService.createSource({ show_name, main, key });
             res.json(source);
         } catch (error) {
+            console.error(error)
             res.status(500).json({ error })
         }
     },
-    addPosterSource: async (req, res) => {
+    addPosterSource: async(req, res) => {
         try {
             const { source_id } = req.params;
             const key = await ShowService.uploadToOnedrive(req.file.buffer, 'posters', { fileSize: req.file.size, filename: Date.now().toString() + '-' + req.file.originalname });
@@ -57,7 +58,7 @@ module.exports = {
             res.status(500).json({ error })
         }
     },
-    getSource: async (req, res) => {
+    getSource: async(req, res) => {
         const { source_id } = req.params;
         try {
             const source = await ShowService.getSource(source_id);
@@ -68,7 +69,7 @@ module.exports = {
             res.status(500).json({ error })
         }
     },
-    getAllSource: async (req, res) => {
+    getAllSource: async(req, res) => {
         try {
             const sources = await ShowService.getAllSource();
             res.json(sources);
@@ -76,7 +77,7 @@ module.exports = {
             res.status(500).json({ error })
         }
     },
-    updateSource: async (req, res) => {
+    updateSource: async(req, res) => {
         try {
             const { source_id } = req.params;
             const datas = req.body;
@@ -88,7 +89,7 @@ module.exports = {
             res.status(500).json({ error })
         }
     },
-    getDownloadUrl: async (req, res) => {
+    getDownloadUrl: async(req, res) => {
         try {
             const url = await ShowService.getDownloadUrl(req.params.key);
             res.json({ url });
@@ -97,7 +98,7 @@ module.exports = {
         }
     },
 
-    createEpisode: async (req, res) => {
+    createEpisode: async(req, res) => {
         const {
             sources,
             name,
@@ -112,7 +113,7 @@ module.exports = {
         }
     },
 
-    getEpisode: async (req, res) => {
+    getEpisode: async(req, res) => {
         const { episode_id } = req.params;
         try {
             const episode = await ShowService.getEpisode(episode_id);
@@ -122,7 +123,7 @@ module.exports = {
         }
     },
 
-    updateEpisode: async (req, res) => {
+    updateEpisode: async(req, res) => {
         try {
             const { episode_id } = req.params;
             const datas = req.body;
@@ -133,7 +134,7 @@ module.exports = {
         }
     },
 
-    deleteEpisode: async (req, res) => {
+    deleteEpisode: async(req, res) => {
         try {
             const { episode_id } = req.params;
             await ShowService.deleteEpisode(episode_id);
@@ -143,7 +144,7 @@ module.exports = {
         }
     },
 
-    createSeason: async (req, res) => {
+    createSeason: async(req, res) => {
         const {
             episodes,
             name,
@@ -158,7 +159,7 @@ module.exports = {
         }
     },
 
-    getSeason: async (req, res) => {
+    getSeason: async(req, res) => {
         const { season_id } = req.params;
         try {
             const season = await ShowService.getSeason(season_id);
@@ -168,7 +169,7 @@ module.exports = {
         }
     },
 
-    updateSeason: async (req, res) => {
+    updateSeason: async(req, res) => {
         try {
             const { season_id } = req.params;
             const datas = req.body;
@@ -179,7 +180,7 @@ module.exports = {
         }
     },
 
-    deleteSeason: async (req, res) => {
+    deleteSeason: async(req, res) => {
         try {
             const { season_id } = req.params;
             await ShowService.deleteSeason(season_id);
@@ -189,7 +190,7 @@ module.exports = {
         }
     },
 
-    getShow: async (req, res) => {
+    getShow: async(req, res) => {
         const { show_id } = req.params;
 
         try {
@@ -249,7 +250,7 @@ module.exports = {
         }
     },
 
-    getAllShows: async (req, res) => {
+    getAllShows: async(req, res) => {
         try {
             const showsDb = await ShowService.getAllShows();
 
@@ -283,7 +284,7 @@ module.exports = {
             res.status(500).json({ error })
         }
     },
-    deleteShow: async (req, res) => {
+    deleteShow: async(req, res) => {
         try {
             const { show_id } = req.params;
             await ShowService.deleteShow(show_id);
@@ -292,7 +293,7 @@ module.exports = {
             res.status(500).json({ error })
         }
     },
-    updateShow: async (req, res) => {
+    updateShow: async(req, res) => {
         try {
             const { show_id } = req.params;
             const datas = req.body;
