@@ -40,7 +40,7 @@ module.exports = {
         try {
 
             const run = async(resolve, reject) => {
-                const accessToken = (await OneDriveSecret.findOne()).access_token;
+                let accessToken = (await OneDriveSecret.findOne()).access_token;
 
                 const fileStream = new Readable({
                     read() {
@@ -75,6 +75,8 @@ module.exports = {
                 let uploadedBytes = 0;
 
                 fileStream.on('data', async(chunk) => {
+                    accessToken = (await OneDriveSecret.findOne()).access_token;
+                    console.log(`Uploading ` + chunk.length)
                     chunks.push(chunk);
                     chunksToUploadSize += chunk.length;
 
