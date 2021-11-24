@@ -1,5 +1,4 @@
 const ShowService = require('../services/ShowService')
-const pm2 = require('pm2');
 
 module.exports = {
     createShow: async(req, res) => {
