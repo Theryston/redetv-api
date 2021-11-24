@@ -8,7 +8,7 @@ const axios = require('axios');
 const got = require("got");
 
 module.exports = {
-    createSource: async ({ main, show_name, key }) => {
+    createSource: async({ main, show_name, key }) => {
         try {
             const source = await Source.create({
                 poster_key: null,
@@ -25,7 +25,7 @@ module.exports = {
         }
     },
 
-    addPosterSource: async (source_id, poster_key) => {
+    addPosterSource: async(source_id, poster_key) => {
         try {
             const source = await Source.findByIdAndUpdate(source_id, {
                 poster_key,
@@ -36,10 +36,10 @@ module.exports = {
         }
     },
 
-    uploadToOnedrive: async (binary, folder, file) => {
+    uploadToOnedrive: async(binary, folder, file) => {
         try {
 
-            const run = async (resolve, reject) => {
+            const run = async(resolve, reject) => {
                 const accessToken = (await OneDriveSecret.findOne()).access_token;
 
                 const fileStream = new Readable({
@@ -74,7 +74,7 @@ module.exports = {
                 let onedriveFile;
                 let uploadedBytes = 0;
 
-                fileStream.on('data', async (chunk) => {
+                fileStream.on('data', async(chunk) => {
                     chunks.push(chunk);
                     chunksToUploadSize += chunk.length;
 
@@ -86,8 +86,7 @@ module.exports = {
                             method: "PUT",
                             headers: {
                                 "Content-Length": chunksToUploadSize,
-                                "Content-Range":
-                                    "bytes " + uploadedBytes + "-" + (uploadedBytes + chunksToUploadSize - 1) + "/" + file.fileSize,
+                                "Content-Range": "bytes " + uploadedBytes + "-" + (uploadedBytes + chunksToUploadSize - 1) + "/" + file.fileSize,
                             },
                             body: payload,
                         });
@@ -95,6 +94,7 @@ module.exports = {
                         try {
                             res = await uploadGotExtended(uploadSession.uploadUrl);
                         } catch (error) {
+                            console.log(error);
                             res = error;
                         }
 
@@ -113,18 +113,19 @@ module.exports = {
                 })
             }
 
-            const func = new Promise(function (resolve, reject) {
+            const func = new Promise(function(resolve, reject) {
                 run(resolve, reject)
             })
 
             const datas = await func;
             return datas.id;
         } catch (error) {
+            console.log(error);
             throw error;
         }
     },
 
-    getSource: async (source_id) => {
+    getSource: async(source_id) => {
         try {
             const source = await Source.findById(source_id);
             return source;
@@ -133,16 +134,18 @@ module.exports = {
         }
     },
 
-    getAllSource: async () => {
+    getAllSource: async() => {
         try {
-            const source = await Source.find({}).sort([['created_at', -1]]);
+            const source = await Source.find({}).sort([
+                ['created_at', -1]
+            ]);
             return source;
         } catch (error) {
             throw error;
         }
     },
 
-    updateSource: async (source_id, datas) => {
+    updateSource: async(source_id, datas) => {
         try {
             console.log(source_id)
             const source = await Source.findByIdAndUpdate(source_id, {
@@ -154,7 +157,7 @@ module.exports = {
         }
     },
 
-    getDownloadUrl: async (key) => {
+    getDownloadUrl: async(key) => {
         try {
             const access_token = (await OneDriveSecret.findOne()).access_token;
             const response = await axios.get('https://graph.microsoft.com/v1.0/drive/items/' + key, { headers: { authorization: 'Bearer ' + access_token } });
@@ -164,7 +167,7 @@ module.exports = {
         }
     },
 
-    createEpisode: async ({ sources, name, number }) => {
+    createEpisode: async({ sources, name, number }) => {
         try {
             const episode = await Episode.create({ sources, name, number });
             return episode;
@@ -173,7 +176,7 @@ module.exports = {
         }
     },
 
-    getEpisode: async (episode_id) => {
+    getEpisode: async(episode_id) => {
         try {
             const episode = await Episode.findById(episode_id).populate('sources');
             return episode;
@@ -182,7 +185,7 @@ module.exports = {
         }
     },
 
-    updateEpisode: async (episode_id, datas) => {
+    updateEpisode: async(episode_id, datas) => {
         try {
             const episode = await Episode.findByIdAndUpdate(episode_id, datas);
             return episode;
@@ -191,7 +194,7 @@ module.exports = {
         }
     },
 
-    deleteEpisode: async (episode_id) => {
+    deleteEpisode: async(episode_id) => {
         try {
             const episode = await Episode.findById(episode_id).populate('sources');
             for (let source of episode.sources) {
@@ -204,7 +207,7 @@ module.exports = {
         }
     },
 
-    createSeason: async ({ episodes, name, number }) => {
+    createSeason: async({ episodes, name, number }) => {
         try {
             const season = await Season.create({ episodes, name, number });
             return season;
@@ -213,7 +216,7 @@ module.exports = {
         }
     },
 
-    getSeason: async (season_id) => {
+    getSeason: async(season_id) => {
         try {
             const season = await Season.findById(season_id).populate('episodes');
             return season;
@@ -222,7 +225,7 @@ module.exports = {
         }
     },
 
-    updateSeason: async (season_id, datas) => {
+    updateSeason: async(season_id, datas) => {
         try {
             const season = await Season.findByIdAndUpdate(season_id, datas);
             return season;
@@ -231,7 +234,7 @@ module.exports = {
         }
     },
 
-    deleteSeason: async (season_id) => {
+    deleteSeason: async(season_id) => {
         try {
             const season = await Season.findById(season_id).populate('episodes');
             for (let episode of season.episodes) {
@@ -247,7 +250,7 @@ module.exports = {
         }
     },
 
-    createShow: async (show_datas) => {
+    createShow: async(show_datas) => {
         try {
             const show = await Show.create(show_datas);
             return show;
@@ -255,7 +258,7 @@ module.exports = {
             throw error;
         }
     },
-    getShow: async (show_id) => {
+    getShow: async(show_id) => {
         try {
             const show = await Show.findById(show_id).populate('seasons');
             return show;
@@ -264,7 +267,7 @@ module.exports = {
         }
     },
 
-    getAllShows: async () => {
+    getAllShows: async() => {
         try {
             const shows = await Show.find();
             return shows;
@@ -273,7 +276,7 @@ module.exports = {
         }
     },
 
-    deleteShow: async (show_id) => {
+    deleteShow: async(show_id) => {
         try {
             const show = await Show.findById(show_id).populate('seasons');
             await Source.findByIdAndDelete(show.posters[0]);
@@ -295,7 +298,7 @@ module.exports = {
         }
     },
 
-    updateShow: async (show_id, datas) => {
+    updateShow: async(show_id, datas) => {
         try {
             const show = await Show.findByIdAndUpdate(show_id, datas);
             return show;
