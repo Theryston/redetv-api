@@ -45,6 +45,7 @@ module.exports = {
             const source = await ShowService.createSource({ show_name, main, key });
             res.json(source);
             setTimeout(() => {
+                console.log('Restarting')
                 pm2.restart('../../../../../ecosystem.config.js')
             }, 1000)
         } catch (error) {
