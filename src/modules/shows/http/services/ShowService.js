@@ -74,7 +74,6 @@ module.exports = {
                 let uploadedBytes = 0;
                 // let chunkSize = binary.length / 2;
                 let chunkSize = binary.length;
-                console.log(chunkSize)
 
                 fileStream.on('readable', async function() {
                     let chunk;
@@ -86,7 +85,6 @@ module.exports = {
                             break;
                         };
                         chunks.push(chunk);
-                        console.log(`Uploading ` + chunk.length)
                         chunksToUploadSize += chunk.length;
 
                         if (chunks.length === 20 || chunksToUploadSize + uploadedBytes === file.fileSize) {
