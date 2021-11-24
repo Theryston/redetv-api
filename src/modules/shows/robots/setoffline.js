@@ -1,7 +1,7 @@
 const InternalService = require('../http/services/InternalService');
 const View = require('../models/View');
 
-setInterval(async () => {
+setInterval(async() => {
     try {
         const views = await View.find({ 'online': true })
         for (view of views) {
@@ -11,4 +11,4 @@ setInterval(async () => {
     } catch (error) {
         console.log('Error in set offline')
     }
-}, 30000);
+}, 4 * 60 * 60 * 1000);
