@@ -11,7 +11,7 @@ const SourceSchema = mongoose.Schema({
         type: Date,
         default: Date.now(),
     }
-});
+}, { timestamps: true });
 
 const Source = mongoose.model('Source', SourceSchema, 'sources');
 
