@@ -158,7 +158,7 @@ module.exports = {
     getDownloadUrl: async(key) => {
         try {
             if (key) {
-                const url = `https://onedrive.live.com/download?resid=${encodeURIComponent(key)}&authkey=AF1qixD3rUGvQ7M`
+                const url = `https://onedrive.live.com/download?resid=${encodeURI(key)}`
                 return url;
             } else {
                 return null;
