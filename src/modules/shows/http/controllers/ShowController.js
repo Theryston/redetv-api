@@ -268,6 +268,7 @@ module.exports = {
                     name: show.name,
                     main: show.main,
                     posters,
+                    seasons: show.seasons,
                     description: show.description,
                     short_description: show.short_description,
                     trailers: show.trailers,
