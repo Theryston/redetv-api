@@ -157,12 +157,9 @@ module.exports = {
 
     getDownloadUrl: async(key) => {
         try {
-            if (key) {
-                const url = `https://onedrive.live.com/download?cid=4513099810CFE2A8&resid=${encodeURI(key)}&authkey=AEjClVIeycrZJDs`
-                return url;
-            } else {
-                return null;
-            }
+            const access_token = (await OneDriveSecret.findOne()).access_token;
+            const response = await axios.get('https://graph.microsoft.com/v1.0/drive/items/' + key, { headers: { authorization: 'Bearer ' + access_token } });
+            return response.data['@microsoft.graph.downloadUrl'];
         } catch (error) {
             throw error;
         }
