@@ -11,7 +11,7 @@ const EpisodeSchema = mongoose.Schema({
         type: Date,
         default: Date.now()
     }
-})
+}, { timestamps: true })
 
 const Episode = mongoose.model('Episode', EpisodeSchema, 'episodes');
 

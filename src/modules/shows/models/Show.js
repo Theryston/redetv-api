@@ -33,6 +33,7 @@ const showSchema = mongoose.Schema({
         default: Date.now()
     },
     main: Boolean,
+    last_episode_date: Date,
 })
 
 const Show = mongoose.model('Show', showSchema, 'shows');

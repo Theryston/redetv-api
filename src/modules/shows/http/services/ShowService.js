@@ -225,6 +225,12 @@ module.exports = {
 
     updateSeason: async(season_id, datas) => {
         try {
+            for (episode of datas.episodes) {
+                if (typeof episode === 'string') {
+                    const show = await Show.findOne({ seasons: season_id });
+                    await Show.findByIdAndUpdate(show._id, { last_episode_date: Date.now() });
+                }
+            }
             const season = await Season.findByIdAndUpdate(season_id, datas);
             return season;
         } catch (error) {
@@ -267,7 +273,7 @@ module.exports = {
 
     getAllShows: async() => {
         try {
-            const shows = await Show.find();
+            const shows = await Show.find().populate('seasons');
             return shows;
         } catch (error) {
             throw error;
