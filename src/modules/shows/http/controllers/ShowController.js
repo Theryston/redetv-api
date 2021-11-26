@@ -235,6 +235,7 @@ module.exports = {
             show.main = showDb.main;
             show.posters = posters;
             show.description = showDb.description;
+            show.last_episode_date = showDb.last_episode_date;
             show.short_description = showDb.short_description;
             show.trailers = showDb.trailers;
             show.release_date_of = showDb.release_date_of;
@@ -269,6 +270,7 @@ module.exports = {
                     main: show.main,
                     posters,
                     seasons: show.seasons,
+                    last_episode_date: show.last_episode_date,
                     description: show.description,
                     short_description: show.short_description,
                     trailers: show.trailers,
