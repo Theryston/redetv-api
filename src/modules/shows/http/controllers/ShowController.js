@@ -64,7 +64,7 @@ module.exports = {
             const source = await ShowService.getSource(source_id);
             let url = await ShowService.getDownloadUrl(source.key);
             let poster = source.poster_key ? await ShowService.getDownloadUrl(source.poster_key) : '';
-            res.json({ _id: source._id, main: source.main, show_name: source.show_name, views_count: source.views_count, like_count: source.like_count, __v: source.__v, url: url, poster: poster });
+            res.json({ _id: source._id, main: source.main, show_name: source.show_name, views_count: source.views_count, like_count: source.like_count, __v: source.__v, url: url, poster: poster, created_at: source.created_at });
         } catch (error) {
             res.status(500).json({ error })
         }
