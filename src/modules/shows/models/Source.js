@@ -8,10 +8,16 @@ const SourceSchema = mongoose.Schema({
     like_count: Number,
     key: String,
     created_at: {
-        type: Date,
-        default: Date.now(),
+        type: Date
     }
 }, { timestamps: true });
+
+
+SourceSchema.pre('save', function(next) {
+    let now = new Date();
+    this.created_at = now;
+    next();
+});
 
 const Source = mongoose.model('Source', SourceSchema, 'sources');
 
