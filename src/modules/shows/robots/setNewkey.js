@@ -1,6 +1,7 @@
 const Source = require('../models/Source');
 const Logo = require('../models/Logo');
 const New = require('../models/New');
+const RedetvLogo = require('../models/RedetvLogo');
 const Season = require('../models/Season');
 const Show = require('../models/Show');
 const OneDriveSecret = require('../models/OneDriveSecret');
@@ -10,6 +11,8 @@ const main = async() => {
     let shows = await Show.find().populate('posters');
     let logos = await Logo.find();
     let news = await New.find();
+    let redetvLogo = await RedetvLogo.find();
+    redetvLogo = redetvLogo[0];
 
     for (let show of shows) {
         try {
@@ -71,6 +74,16 @@ const main = async() => {
             }
         } catch (error) {
             console.log('Error in update new ' + newdata.company_name)
+        }
+    }
+
+    if (redetvLogo.key.indexOf('http') === -1) {
+        try {
+            let url = await requestUrl(redetvLogo.key);
+            await RedetvLogo.findByIdAndUpdate(redetvLogo._id, { key: url });
+            console.log('Updated redetv logo');
+        } catch (error) {
+            console.log('Error in update redetv logo');
         }
     }
 
