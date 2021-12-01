@@ -167,11 +167,8 @@ module.exports = {
     getDownloadUrl: async(key) => {
         try {
             if (key.indexOf('http') !== -1) {
-                console.log('Returnnig key url')
-                console.log(key)
                 return key;
             } else {
-                console.log('Getting url')
                 const access_token = (await OneDriveSecret.findOne()).access_token;
                 const response = await axios.get('https://graph.microsoft.com/v1.0/drive/items/' + key, { headers: { authorization: 'Bearer ' + access_token } });
                 return response.data['@microsoft.graph.downloadUrl'];
