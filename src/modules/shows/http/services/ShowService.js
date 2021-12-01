@@ -168,6 +168,7 @@ module.exports = {
         try {
             if (key.indexOf('http') !== -1) {
                 console.log('Returnnig key url')
+                console.log(key)
                 return key;
             } else {
                 console.log('Getting url')
