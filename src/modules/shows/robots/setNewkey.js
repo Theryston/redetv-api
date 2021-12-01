@@ -1,26 +1,26 @@
-const { Readable } = require('stream');
 const Source = require('../models/Source');
-const Episode = require('../models/Episode');
+const Logo = require('../models/Logo');
+const New = require('../models/New');
 const Season = require('../models/Season');
 const Show = require('../models/Show');
 const OneDriveSecret = require('../models/OneDriveSecret');
 const axios = require('axios');
 
 const main = async() => {
-    try {
-        let shows = await Show.find().populate('posters');
+    let shows = await Show.find().populate('posters');
+    let logos = await Logo.find();
+    let news = await New.find();
 
-        for await (let show of shows) {
-            for await (let poster of show.posters) {
+    for (let show of shows) {
+        try {
+            for (let poster of show.posters) {
                 if (poster.key.indexOf('http') === -1) {
                     let url = await requestUrl(poster.key);
                     await Source.findByIdAndUpdate(poster._id, { key: url });
                 }
             }
 
-            console.log('Updated posters of show by name ' + show.name);
-
-            for await (let season of show.seasons) {
+            for (let season of show.seasons) {
                 let seasonDb = await Season.findById(season).populate('episodes');
                 for (let episode of seasonDb.episodes) {
                     for (let source of episode.sources) {
@@ -43,13 +43,38 @@ const main = async() => {
                 }
             }
 
-            console.log('Updated sources of show by name ' + show.name);
-        }
+            console.log('Updated show ' + show.name);
+        } catch (error) {
+            console.log('Error in update show: ' + show.name);
 
-        console.log('Completed process of update urls');
-    } catch (error) {
-        console.log('Error in update urls: ' + error.message);
+        }
     }
+
+    for (let logo of logos) {
+        try {
+            if (logo.key.indexOf('http') === -1) {
+                let url = await requestUrl(logo.key);
+                await Logo.findByIdAndUpdate(logo._id, { key: url });
+                console.log('Updated logo by company name ' + logo.company_name);
+            }
+        } catch (error) {
+            console.log('Error in update logo: ' + logo.company_name)
+        }
+    }
+
+    for (let newdata of news) {
+        try {
+            if (newdata.key.indexOf('http') === -1) {
+                let url = await requestUrl(newdata.key);
+                await New.findByIdAndUpdate(newdata._id, { key: url });
+                console.log('Updated new by company name ' + newdata.company_name);
+            }
+        } catch (error) {
+            console.log('Error in update new ' + newdata.company_name)
+        }
+    }
+
+    console.log('Completed process of update urls');
 };
 
 const requestUrl = async(key) => {
