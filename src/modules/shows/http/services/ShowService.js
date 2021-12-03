@@ -254,10 +254,12 @@ module.exports = {
 
     updateSeason: async(season_id, datas) => {
         try {
-            for (episode of datas.episodes) {
-                if (typeof episode === 'string') {
-                    const show = await Show.findOne({ seasons: season_id });
-                    await Show.findByIdAndUpdate(show._id, { last_episode_date: Date.now() });
+            if (datas.episodes) {
+                for (episode of datas.episodes) {
+                    if (typeof episode === 'string') {
+                        const show = await Show.findOne({ seasons: season_id });
+                        await Show.findByIdAndUpdate(show._id, { last_episode_date: Date.now() });
+                    }
                 }
             }
             const season = await Season.findByIdAndUpdate(season_id, datas);
