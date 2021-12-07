@@ -41,6 +41,7 @@ const showSchema = mongoose.Schema({
 showSchema.pre('save', function(next) {
     let now = new Date();
     this.updated_at = now;
+    this.updatedAt = now;
     if (!this.created_at) {
         this.created_at = now;
     }
