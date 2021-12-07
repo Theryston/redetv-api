@@ -38,7 +38,7 @@ const showSchema = mongoose.Schema({
     last_episode_date: Date,
 }, { timestamps: true })
 
-ItemSchema.pre('save', function(next) {
+showSchema.pre('save', function(next) {
     let now = new Date();
     this.updated_at = now;
     if (!this.created_at) {
