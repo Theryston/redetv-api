@@ -258,7 +258,8 @@ module.exports = {
                 for (episode of datas.episodes) {
                     if (typeof episode === 'string') {
                         const show = await Show.findOne({ seasons: season_id });
-                        await Show.findByIdAndUpdate(show._id, { last_episode_date: Date.now() });
+                        const now = new Date();
+                        await Show.findByIdAndUpdate(show._id, { last_episode_date: now });
                     }
                 }
             }
