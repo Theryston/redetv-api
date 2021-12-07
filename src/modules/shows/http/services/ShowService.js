@@ -295,7 +295,9 @@ module.exports = {
     },
     getShow: async(show_id) => {
         try {
-            const show = await Show.findById(show_id).populate('seasons');
+            const show = await Show.findById(show_id).populate('seasons').sort([
+                ['last_episode_date', -1]
+            ]);
             return show;
         } catch (error) {
             throw error;
