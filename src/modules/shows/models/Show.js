@@ -30,11 +30,22 @@ const showSchema = mongoose.Schema({
     }],
     created_at: {
         type: Date,
-        default: Date.now()
+    },
+    updated_at: {
+        type: Date,
     },
     main: Boolean,
     last_episode_date: Date,
-})
+}, { timestamps: true })
+
+ItemSchema.pre('save', function(next) {
+    let now = new Date();
+    this.updated_at = now;
+    if (!this.created_at) {
+        this.created_at = now;
+    }
+    next();
+});
 
 const Show = mongoose.model('Show', showSchema, 'shows');
 

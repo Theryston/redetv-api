@@ -306,7 +306,7 @@ module.exports = {
     getAllShows: async() => {
         try {
             const shows = await Show.find().populate('seasons').sort([
-                ['last_episode_date', -1]
+                ['updated_at', -1]
             ]);
             return shows;
         } catch (error) {
