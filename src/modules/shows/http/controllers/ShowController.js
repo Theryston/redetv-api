@@ -278,15 +278,15 @@ module.exports = {
                     show_hosts_name: show.show_hosts_name,
                     categories: show.categories,
                     created_at: show.created_at,
-                    updated_at: show.updated_at,
+                    updatedAt: show.updatedAt,
                 });
             }
 
             shows.sort(function(a, b) {
-                if (a.updated_at > b.updated_at) {
+                if (a.updatedAt > b.updatedAt) {
                     return -1;
                 }
-                if (a.updated_at < b.updated_at) {
+                if (a.updatedAt < b.updatedAt) {
                     return 1;
                 }
                 return 0;
