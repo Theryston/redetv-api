@@ -281,6 +281,16 @@ module.exports = {
                 });
             }
 
+            shows.sort(function(a, b) {
+                if (a.updated_at > b.updated_at) {
+                    return -1;
+                }
+                if (a.updated_at < b.updated_at) {
+                    return 1;
+                }
+                return 0;
+            })
+
             res.json(shows)
         } catch (error) {
             res.status(500).json({ error })
