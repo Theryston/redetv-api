@@ -278,6 +278,7 @@ module.exports = {
                     show_hosts_name: show.show_hosts_name,
                     categories: show.categories,
                     created_at: show.created_at,
+                    updated_at: show.updated_at,
                 });
             }
 
