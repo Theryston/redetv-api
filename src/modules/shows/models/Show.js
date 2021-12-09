@@ -36,6 +36,10 @@ const showSchema = mongoose.Schema({
     },
     main: Boolean,
     last_episode_date: Date,
+    order: {
+        type: Number,
+        required: true,
+    }
 }, { timestamps: true })
 
 showSchema.pre('save', function(next) {
