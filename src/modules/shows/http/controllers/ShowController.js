@@ -242,6 +242,7 @@ module.exports = {
             show.show_hosts_name = showDb.show_hosts_name;
             show.categories = showDb.categories;
             show.created_at = showDb.created_at;
+            show.order = showDb.order;
             show.seasons = seasons;
 
             res.json(show);
