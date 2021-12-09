@@ -279,18 +279,9 @@ module.exports = {
                     categories: show.categories,
                     created_at: show.created_at,
                     updatedAt: show.updatedAt,
+                    order: show.order,
                 });
             }
-
-            shows.sort(function(a, b) {
-                if (a.updatedAt > b.updatedAt) {
-                    return -1;
-                }
-                if (a.updatedAt < b.updatedAt) {
-                    return 1;
-                }
-                return 0;
-            })
 
             res.json(shows)
         } catch (error) {
