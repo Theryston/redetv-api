@@ -38,7 +38,7 @@ const showSchema = mongoose.Schema({
     last_episode_date: Date,
     order: {
         type: Number,
-        required: true,
+        default: 1
     }
 }, { timestamps: true })
 
