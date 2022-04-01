@@ -241,7 +241,7 @@ module.exports = {
   addView: async (req, res) => {
     try {
       const ip = req.body.user_ip;
-      const view = InternalService.addView(ip);
+      const view = await InternalService.addView(ip);
       res.json(view);
     } catch (error) {
       res.status(500).json({ error });
